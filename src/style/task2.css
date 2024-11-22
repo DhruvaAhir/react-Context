@@ -1,0 +1,36 @@
+form {
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 15px;
+}
+.form-element {
+  display: flex;
+  label {
+    margin-top: 20px;
+    margin-right: 20px;
+    padding: 5px;
+  }
+  input {
+    height: 25px;
+    width: 300px;
+    margin-top: 20px;
+    margin-left: auto;
+  }
+  button {
+    height: 30px;
+    width: 100px;
+    margin: 11px;
+  }
+  h1 {
+    color: red;
+  }
+}
+
+.add-user {
+  justify-items: center;
+}
+.div {
+  width: 50vw;
+  padding: 10px;
+}
+
