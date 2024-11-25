@@ -16,9 +16,25 @@ const EditDialog = memo(({ open, handleClose, addHistory, user }) => {
                 PaperProps={{
                     component: 'form', onSubmit: (event) => {
                         event.preventDefault();
+
+                        setUsers((prev) => {
+                            return prev.map((val) => {
+                                if (val.id === editUser.id) {
+                                    addHistory(val)
+                                    return { ...editUser, age: new Date().getFullYear() - new Date(editUser.dob).getFullYear() }
+                                }
+                                else {
+                                    return val
+                                }
+                            })
+                        })
+
+
+
                         setUsers(users.map((val) => {
                             if (val.id === editUser.id) {
                                 addHistory(val)
+                                console.log(new Date(editUser.dob).getFullYear())
                                 return { ...editUser, age: new Date().getFullYear() - new Date(editUser.dob).getFullYear() }
                             }
                             else {
@@ -49,7 +65,7 @@ const EditDialog = memo(({ open, handleClose, addHistory, user }) => {
                                 <TextField id="phone" value={editUser.phone} onChange={(e) => { setEditUser({ ...editUser, phone: e.target.value }) }} name='phone' label="Phone" />
                             </div>
                             <div>
-                                <DatePicker format='YYYY-MM-DD' label="Birth-date" value={dayjs(editUser.dob)} onChange={(val) => { setEditUser({ ...editUser, dob: dayjs(val).format('YYYY-MM-DD') }) }} />
+                                <DatePicker format='DD-MM-YYYY' label="Birth-date" value={dayjs(editUser.dob)} onChange={(val) => { setEditUser({ ...editUser, dob: dayjs(val).format('DD-MM-YYYY') }) }} />
                                 <TextField id="img" value={editUser.profileImageUrl} onChange={(e) => { setEditUser({ ...editUser, profileImageUrl: e.target.value }) }} name='profileurl' label="Profile img URL" />
                             </div>
                             <div>
@@ -68,7 +84,7 @@ const EditDialog = memo(({ open, handleClose, addHistory, user }) => {
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button type="submit">Edit</Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog >
         </>
     )
 })

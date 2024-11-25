@@ -8,8 +8,7 @@ import dayjs from 'dayjs'
 
 const AddUser = () => {
 
-    console.log('AddUser Rendered')
-    const { users, setUsers } = useContext(UserContext);
+    const { setUsers } = useContext(UserContext);
     const [newUser, setNewUser] = useState({
         firstName: "",
         lastName: "",
@@ -22,18 +21,7 @@ const AddUser = () => {
         isDeleted: false,
         address: "",
     })
-    // const [newUser, setNewUser] = useState({
-    //     firstName: "Demo",
-    //     lastName: "Demo",
-    //     email: "demo",
-    //     phone: "123-123-1232",
-    //     dob: '10-10-2000',
-    //     age: 0,
-    //     profileImageUrl: "https://randomuser.me/api/portraits/men/1.jpg",
-    //     isAdmin: false,
-    //     isDeleted: false,
-    //     address: "123,123,123",
-    // })
+
     const [errors, setErrors] = useState({
         firstName: false,
         lastName: false,
@@ -43,6 +31,7 @@ const AddUser = () => {
         ehelp: ""
     })
     const navigate = useNavigate()
+
     const validateField = (field) => {
         if (newUser[field] === "") {
             if (field === 'firstName') {
@@ -86,11 +75,13 @@ const AddUser = () => {
             add = false
         }
         if (newUser.email === "") {
-            error = { ...error, email: true, ehelp: "Enter email Name" }
+            error = { ...error, email: true, ehelp: "Enter email" }
             add = false
         }
         if (add) {
-            setUsers([...users, { ...newUser, id: new Date().getTime(), age: new Date().getFullYear() - new Date(newUser.dob).getFullYear() }])
+            setUsers((prev) => {
+                return [...prev, { ...newUser, id: new Date().getTime(), age: new Date().getFullYear() - new Date(newUser.dob).getFullYear() }]
+            })
             navigate('/')
         } else {
             setErrors(error)
@@ -114,7 +105,7 @@ const AddUser = () => {
                         <TextField id="phone" value={newUser.phone} onChange={(e) => { setNewUser({ ...newUser, phone: e.target.value }) }} name='phone' label="Phone" />
                     </div>
                     <div>
-                        <DatePicker format='YYYY-MM-DD' label="Birth-date" value={dayjs(newUser.dob)} onChange={(val) => { setNewUser({ ...newUser, dob: dayjs(val).format('YYYY-MM-DD') }) }} />
+                        <DatePicker label="Birth-date" onChange={(val) => { setNewUser({ ...newUser, dob: dayjs(val).format('DD-MM-YYYY') }) }} />
                         <TextField id="img" value={newUser.profileImageUrl} onChange={(e) => { setNewUser({ ...newUser, profileImageUrl: e.target.value }) }} name='profileurl' label="Profile img URL" />
                     </div>
                     <div>

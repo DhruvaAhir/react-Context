@@ -1,7 +1,5 @@
 import React, { memo, useState } from 'react'
-import admin from '../img/setting.png'
-import deleted from '../img/delete.png'
-import { Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip, Typography, } from '@mui/material'
+import { Button, ButtonGroup, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip, Typography, } from '@mui/material'
 import Icon from '@mui/material/Icon';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,25 +29,27 @@ const UserCard =
             };
             const user = props.user
             const delBtn = (user.isDeleted) ? (
-                <Button onClick={() => {
+                <Tooltip title="Restore">
+                    <Button onClick={() => {
 
-                    handleDeleteDialogClickOpen()
+                        handleDeleteDialogClickOpen()
 
-                }} color='error'>
-                    <Icon Icon fontSize="small" >
-                        restore_from_trash
-                    </Icon>
-                    Restore
-                </Button >
+                    }} color='error'>
+                        <Icon Icon fontSize="small"  >
+                            restore_from_trash
+                        </Icon>
+                    </Button >
+                </Tooltip>
             ) : (
-                <Button color='error' onClick={() => {
-                    handleDeleteDialogClickOpen()
-                }}>
-                    <Icon Icon fontSize="small" >
-                        delete
-                    </Icon>
-                    Delete
-                </Button >
+                <Tooltip title="Delete">
+                    <Button color='error' onClick={() => {
+                        handleDeleteDialogClickOpen()
+                    }}>
+                        <Icon Icon fontSize="small" >
+                            delete
+                        </Icon>
+                    </Button >
+                </Tooltip>
             )
 
             const handleEditDialogOpen = () => {
@@ -62,10 +62,10 @@ const UserCard =
             return (
                 <div className='user-card'>
                     <div className="is-admin">
-                        {user.isAdmin && < img className='admin-img' src={admin} alt="admin" />}
+                        {user.isAdmin && <Chip className='admin-img' label='Admin' variant="outlined" color="success" />}
                     </div>
                     <div className="is-deleted">
-                        {user.isDeleted && < img className='deleted-img' src={deleted} alt="admin" />}
+                        {user.isDeleted && <Chip className='deleted-img' label='Deleted' variant="outlined" color="error" />}
                     </div>
                     <div className="img"><img src={user.profileImageUrl} alt="user" /></div>
                     <div className="info-name">
@@ -100,18 +100,19 @@ const UserCard =
                             </div>
                         </div>
                         <div className="info-field">
-                            <ButtonGroup variant="outlined" aria-label="Basic button group">
-                                <Button onClick={handleEditDialogOpen} color='warning' >
-
-                                    <span class="material-icons-outlined">
+                            <ButtonGroup variant="outlined" aria-label="Basic button group" sx={{ mt: 2, mx: 'auto' }}>
+                                <Tooltip title="Edit">
+                                    <Button onClick={handleEditDialogOpen} color='warning' >
                                         <Icon fontSize="small">edit</Icon>
-                                        edit
-                                    </span>
-                                </Button>
-                                {
-                                    (props.hisKeys).includes((user.id).toString()) && <Button onClick={() => { navigate(`history/${user.id}`) }}>
-                                        <Icon>timeline</Icon>
                                     </Button>
+                                </Tooltip>
+                                {
+                                    (props.hisKeys).includes((user.id).toString()) &&
+                                    <Tooltip title="edit history">
+                                        <Button onClick={() => { navigate(`history/${user.id}`) }}>
+                                            <Icon>timeline</Icon>
+                                        </Button>
+                                    </Tooltip>
                                 }
                                 {delBtn}
                             </ButtonGroup>
@@ -122,8 +123,8 @@ const UserCard =
                         fullWidth
                         keepMounted
                         onClose={handleDeleteDialogClose}
-                        aria-describedby="alert-dialog-slide-description"
-                    >
+                        aria-describedby="alert-dialog-slide-description">
+
                         <DialogTitle>{"Are you Sure?"}</DialogTitle>
                         <DialogContent>
                             {user.isDeleted ? "Restoring the user make them reappear in the profile." : "Deleting the user you won't be able to see them in profile."}
@@ -132,9 +133,9 @@ const UserCard =
                             <Button onClick={handleDeleteDialogClose}>Disagree</Button>
                             <Button onClick={() => { props.delUser(user.id); handleDeleteDialogClose(); }}>Agree</Button>
                         </DialogActions>
+
                     </Dialog>
                     <EditDialog open={editDialog} handleClose={handleEditDialogClose} addHistory={props.addHistory} user={editingUser} />
-
                 </div>
             )
         }
